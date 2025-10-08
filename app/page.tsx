@@ -34,9 +34,9 @@ const DATA = {
   partners: [
     {
       name: "Unseen Studios",
-      logo: "https://placehold.co/200x60/ffd700/0a0a0a?text=Unseen+Studios&font=raleway",
+      logo: "/logos/unseen-studios.png", // Using local logo
       testimonial: {
-        text: "Partnering with GoHype was a turning point. Our 3D website isn’t just a site  it’s a story that our audience interacts with. The blend of design and depth made us stand out instantly.",
+        text: "Partnering with GoHype was a turning point. Our 3D website isn’t just a site — it’s a story that our audience interacts with. The blend of design and depth made us stand out instantly.",
         author: "Michael Chen",
         position: "Digital Lead, Unseen Studios",
         rating: 5,
@@ -44,7 +44,7 @@ const DATA = {
     },
     {
       name: "Palmolive",
-      logo: "https://placehold.co/200x60/ffd700/0a0a0a?text=Palmolive&font=raleway",
+      logo: "/logos/palmolive.png", // Using local logo
       testimonial: {
         text: "GoHype Media transformed our digital presence with stunning 3D product visualizations. The attention to detail and creative execution exceeded our expectations.",
         author: "Sarah Johnson",
@@ -54,7 +54,7 @@ const DATA = {
     },
     {
       name: "Kohler",
-      logo: "https://placehold.co/200x60/ffd700/0a0a0a?text=Kohler&font=raleway",
+      logo: "/logos/kohler.png", // Using local logo
       testimonial: {
         text: "The team delivered a premium web experience that perfectly captures our luxury brand essence. The 3D configurator they built has significantly increased customer engagement.",
         author: "Emily Rodriguez",
@@ -64,7 +64,7 @@ const DATA = {
     },
     {
       name: "Nestle",
-      logo: "https://placehold.co/200x60/ffd700/0a0a0a?text=Nestle&font=raleway",
+      logo: "/logos/nestle.png", // Using local logo
       testimonial: {
         text: "GoHype Media's expertise in motion design and modern UI helped us launch a campaign that resonated with millions. Their professionalism and creativity are unmatched.",
         author: "David Park",
@@ -74,7 +74,7 @@ const DATA = {
     },
     {
       name: "Dabur",
-      logo: "https://placehold.co/200x60/ffd700/0a0a0a?text=Dabur&font=raleway",
+      logo: "/logos/dabur.png", // Using local logo
       testimonial: {
         text: "From concept to execution, GoHype delivered excellence. The interactive elements they created have dramatically improved our user engagement and conversion rates.",
         author: "Priya Sharma",
@@ -84,7 +84,7 @@ const DATA = {
     },
     {
       name: "Cerelac",
-      logo: "https://placehold.co/200x60/ffd700/0a0a0a?text=Cerelac&font=raleway",
+      logo: "/logos/cerelac.png", // Using local logo
       testimonial: {
         text: "The modern, playful design GoHype created perfectly aligns with our brand values. Their technical skills combined with creative vision make them our go to agency.",
         author: "James Wilson",
@@ -113,46 +113,31 @@ const DATA = {
       icon: <Wind size={24} />,
     },
   ],
+  // --- PROJECT DATA UPDATED HERE ---
   projects: [
     {
-      category: "Corporate & Enterprise",
-      title: "Case Study: The Visionary Portal",
+      category: "Sports & Recreation",
+      title: "Deuce Arena",
       description:
-        "A corporate brand reinvented with an immersive 3D interface, turning investor storytelling into a cinematic experience. We combined realistic 3D motion, dynamic transitions, and real time data visuals to make complex information simple and stunning.",
-      image: "https://picsum.photos/seed/projectA/1200/800",
-      bgColor: "from-yellow-400 to-amber-500",
+        "An immersive hero section for a premier Padel and Pickleball club. The animated 3D racket and ball capture the dynamic energy of the sport, creating an engaging first impression for visitors.",
+      video: "/videos/deuce.mp4",
+      bgColor: "from-green-400 to-teal-500",
     },
     {
-      category: "E-Commerce & Retail",
-      title: "Case Study: The 3D Storefront",
+      category: "Health & Wellness",
+      title: "Fizzix Super Garcinia",
       description:
-        "We built a virtual shopping space where products aren’t just seen — they’re experienced. From interactive product spins to smooth 3D navigation, the result was a digital showroom that increased engagement and reduced bounce rates.",
-      image: "https://picsum.photos/seed/projectB/1200/800",
-      bgColor: "from-amber-400 to-orange-500",
+        "A vibrant and energetic product showcase for a health supplement. We used captivating motion graphics and a scroll-based animation to guide users through the product's features and benefits.",
+      video: "/videos/fizzix.mp4",
+      bgColor: "from-lime-400 to-green-500",
     },
     {
-      category: "Technology & Apps",
-      title: "Case Study: The Motion Interface",
+      category: "Fashion & Apparel",
+      title: "Delan Fashion",
       description:
-        "For a fast-growing tech brand, we crafted a fluid, animated interface that redefined app-like navigation for the web. Each motion was intentional, guiding users with energy, rhythm, and precision across a futuristic layout.",
-      image: "https://picsum.photos/seed/projectC/1200/800",
-      bgColor: "from-yellow-300 to-amber-400",
-    },
-    {
-      category: "Product Design & Manufacturing",
-      title: "Case Study: The Interactive Configurator",
-      description:
-        "A 3D product configurator built for a manufacturing brand — allowing users to rotate, customize, and explore every detail before purchase. This project merged design and engineering, turning technical specs into an experience that sells.",
-      image: "https://picsum.photos/seed/projectD/1200/800",
-      bgColor: "from-amber-500 to-yellow-600",
-    },
-     {
-      category: "Hospitality & Real Estate",
-      title: "Case Study: The Living Experience",
-      description:
-        "For a luxury property brand, we created a 3D walkthrough platform that allowed potential buyers to feel the space before stepping inside. Every motion, shadow, and transition was crafted to mirror real-world depth — bridging emotion and architecture.",
-      image: "https://picsum.photos/seed/projectE/1200/800",
-      bgColor: "from-yellow-500 to-amber-600",
+        "A minimalist yet sophisticated animation for a modern fashion brand. The subtle 3D rotation and text reveals create an elegant and high-end feel, perfectly aligning with the brand's aesthetic.",
+      video: "/videos/delan.mp4",
+      bgColor: "from-stone-400 to-neutral-500",
     },
   ],
   social: [
@@ -217,13 +202,27 @@ function AIChat() {
   const handleSend = () => {
     if (!input.trim()) return
     setMessages([...messages, { text: input, isUser: true }])
+    const userMessage = input.toLowerCase()
     setInput("")
-    
+
     setTimeout(() => {
-      setMessages(prev => [...prev, { 
-        text: "Thanks for your message! Our team will get back to you shortly.", 
-        isUser: false 
-      }])
+      let botResponse = "I'm sorry, I didn't understand that. Could you rephrase?"
+
+      if (userMessage.includes("services")) {
+        botResponse = `We offer the following services: ${DATA.services
+          .map((service) => service.title)
+          .join(", ")}.`
+      } else if (userMessage.includes("contact")) {
+        botResponse = `You can reach us at ${DATA.contact.email} or call us at ${DATA.contact.phone}.`
+      } else if (userMessage.includes("projects")) {
+        botResponse = `Here are some of our projects: ${DATA.projects
+          .map((project) => project.title)
+          .join(", ")}.`
+      } else if (userMessage.includes("testimonial")) {
+        botResponse = `Here's what our clients say: \"${DATA.partners[0].testimonial.text}\" - ${DATA.partners[0].testimonial.author}`
+      }
+
+      setMessages((prev) => [...prev, { text: botResponse, isUser: false }])
     }, 1000)
   }
 
@@ -508,10 +507,10 @@ const Header = ({ siteName, navLinks, ctaPrimary }: any) => {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 md:px-8">
         <a href="#" className="flex items-center gap-3 group" aria-label="Go home">
           {/* LOGO CHANGE HERE */}
-          <img 
-            src="/logo.png" 
-            alt={`${siteName} logo`} 
-            className="h-11 w-11 group-hover:scale-110 transition-transform duration-300" 
+          <img
+            src="/logo.png"
+            alt={`${siteName} logo`}
+            className="h-11 w-11 group-hover:scale-110 transition-transform duration-300"
           />
           <span className="text-xl font-bold tracking-tight text-white">{siteName}</span>
         </a>
@@ -574,9 +573,9 @@ const Footer = ({ siteName, contact, social }: any) => (
         <div className="md:col-span-2">
           <div className="flex items-center gap-3 mb-6">
             {/* LOGO CHANGE HERE */}
-            <img 
-              src="/logo.png" 
-              alt={`${siteName} logo`} 
+            <img
+              src="/logo.png"
+              alt={`${siteName} logo`}
               className="h-12 w-12"
             />
             <span className="text-xl font-bold text-white">{siteName}</span>
@@ -589,14 +588,14 @@ const Footer = ({ siteName, contact, social }: any) => (
           <h3 className="font-semibold text-white mb-4 text-lg">Contact</h3>
           <ul className="space-y-3 text-sm text-gray-400">
             <li>
-                <strong className="text-white">📍 Address:</strong><br />
-                {contact.address}
+              <strong className="text-white">📍 Address:</strong><br />
+              {contact.address}
             </li>
             <li>
-                <strong className="text-white">✉️ Email:</strong><br />
-                <a href={`mailto:${contact.email}`} className="hover:text-yellow-400 transition-colors">
-                    {contact.email}
-                </a>
+              <strong className="text-white">✉️ Email:</strong><br />
+              <a href={`mailto:${contact.email}`} className="hover:text-yellow-400 transition-colors">
+                {contact.email}
+              </a>
             </li>
           </ul>
         </div>
@@ -604,14 +603,14 @@ const Footer = ({ siteName, contact, social }: any) => (
           <h3 className="font-semibold text-white mb-4 text-lg">Get in Touch</h3>
           <ul className="space-y-3 text-sm text-gray-400">
             <li>
-                <strong className="text-white">📞 Phone:</strong><br />
-                <a href={`tel:${contact.phone}`} className="hover:text-yellow-400 transition-colors">
-                    {contact.phone}
-                </a>
+              <strong className="text-white">📞 Phone:</strong><br />
+              <a href={`tel:${contact.phone}`} className="hover:text-yellow-400 transition-colors">
+                {contact.phone}
+              </a>
             </li>
             <li>
-                <strong className="text-white">🕐 Hours:</strong><br />
-                {contact.hours}
+              <strong className="text-white">🕐 Hours:</strong><br />
+              {contact.hours}
             </li>
           </ul>
         </div>
@@ -752,14 +751,14 @@ export default function App() {
     }
 
     document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-      anchor.addEventListener("click", function (e) {
-        e.preventDefault()
-        const target = document.querySelector((this as HTMLAnchorElement).getAttribute("href")!)
-        if (target) {
-          target.scrollIntoView({ behavior: "smooth", block: "start" })
-        }
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault()
+          const target = document.querySelector((e.currentTarget as HTMLAnchorElement).getAttribute("href")!)
+          if (target) {
+            target.scrollIntoView({ behavior: "smooth", block: "start" })
+          }
+        })
       })
-    })
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove)
@@ -768,7 +767,7 @@ export default function App() {
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setFormData({ ...formData, [e.target.name]: e.target.value })
-  
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     setFormStatus({ submitting: true, submitted: false })
@@ -796,12 +795,12 @@ export default function App() {
           transition: opacity 0.3s;
         }
       `}} />
-      
+
       <div ref={spotlightRef} id="cursor-spotlight" />
 
       <Header siteName={DATA.siteName} navLinks={DATA.navLinks} ctaPrimary={DATA.ctaPrimary} />
-      
-      <AIChat />
+
+      {/* <AIChat /> */}
 
       <main className="pt-20">
         <section ref={heroRef} className="relative overflow-hidden min-h-screen flex items-center">
@@ -824,13 +823,13 @@ export default function App() {
                     href={DATA.ctaPrimary.href}
                     className="rounded-full bg-gradient-to-r from-yellow-400 to-amber-300 px-8 py-4 text-base font-bold text-slate-950 shadow-2xl shadow-yellow-400/30 hover:shadow-yellow-400/50 flex items-center gap-2"
                   >
-                    🔶 {DATA.ctaPrimary.label}
+                     {DATA.ctaPrimary.label}
                   </MagneticButton>
                   <a
                     href={DATA.ctaSecondary.href}
                     className="rounded-full border-2 border-white/10 bg-white/[0.03] backdrop-blur-xl px-8 py-4 text-base font-bold text-white hover:bg-white/[0.08] hover:border-white/20 transition-all duration-300 flex items-center gap-2"
                   >
-                    ⚡ {DATA.ctaSecondary.label}
+                     {DATA.ctaSecondary.label}
                   </a>
                 </div>
               </div>
@@ -874,70 +873,56 @@ export default function App() {
             </div>
           </div>
         </section>
-
-        <section ref={partnersRef} id="partners" className="bg-white/[0.02] py-24 border-y border-white/5">
-          <div className="mx-auto max-w-7xl px-6 md:px-8">
-            <div className="text-center mb-20">
-              <h2 className="text-5xl font-black tracking-tight md:text-6xl bg-gradient-to-br from-yellow-400 to-amber-300 bg-clip-text text-transparent">
-                Trusted by Visionaries. Admired by Audiences.
+ <section id="partners" className="bg-slate-950 text-white py-24 sm:py-32">
+          <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <div className="text-center mb-16 sm:mb-20">
+              <h2 className="text-4xl font-black tracking-tight leading-loose sm:text-5xl md:text-6xl bg-gradient-to-br from-yellow-400 to-amber-300 bg-clip-text text-transparent">
+                Trusted by Visionaries.
               </h2>
-              <p className="mt-4 text-lg text-gray-400 max-w-3xl mx-auto">
-                We collaborate with bold brands and creators who want more than just a website — they want a statement.
-              </p>
             </div>
-
-            {selectedBrand !== null && (
+            {selectedBrand !== null && DATA.partners[selectedBrand] && (
               <div className="mb-16 max-w-4xl mx-auto">
-                <div className="rounded-3xl bg-white/[0.03] border-2 border-yellow-400/30 p-8 md:p-12 shadow-2xl shadow-yellow-400/20 backdrop-blur-xl">
-                  <div className="flex gap-2 mb-6">
-                    {[...Array(DATA.partners[selectedBrand].testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="w-6 h-6 fill-yellow-400 text-yellow-400" />
-                    ))}
-                  </div>
-                  <blockquote className="text-xl md:text-2xl font-medium text-white leading-relaxed mb-8 text-pretty">
+                <div className="rounded-3xl bg-slate-800/50 border border-slate-700 p-8 md:p-12">
+                  <blockquote className="text-xl md:text-2xl font-medium leading-relaxed mb-8">
                     "{DATA.partners[selectedBrand].testimonial.text}"
                   </blockquote>
-                  <div className="flex items-center gap-4">
-                    <div className="h-14 w-14 rounded-full bg-gradient-to-br from-yellow-400 to-amber-300 flex items-center justify-center text-slate-950 font-bold text-xl">
-                      {DATA.partners[selectedBrand].testimonial.author.charAt(0)}
-                    </div>
-                    <div>
-                      <div className="font-bold text-white text-lg">
-                        {DATA.partners[selectedBrand].testimonial.author}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="h-14 w-14 rounded-full bg-gradient-to-br from-yellow-400 to-amber-300 flex items-center justify-center text-slate-950 font-bold text-xl flex-shrink-0">
+                        {DATA.partners[selectedBrand].testimonial.author.charAt(0)}
                       </div>
-                      <div className="text-gray-400 text-sm">
-                        {DATA.partners[selectedBrand].testimonial.position}
+                      <div>
+                        <div className="font-bold text-lg">{DATA.partners[selectedBrand].testimonial.author}</div>
+                        <div className="text-gray-400 text-sm">{DATA.partners[selectedBrand].testimonial.position}</div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             )}
-
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-12 items-center justify-items-center max-w-5xl mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 items-stretch max-w-6xl mx-auto">
               {DATA.partners.map((partner, index) => (
                 <button
                   key={partner.name}
                   onClick={() => handleBrandClick(index)}
-                  className={`partner-logo flex items-center justify-center transition-all duration-500 hover:scale-110 cursor-pointer focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2 focus:ring-offset-slate-950 rounded-2xl p-4 ${
-                    selectedBrand === null || selectedBrand === index
-                      ? "grayscale-0 opacity-100"
-                      : "grayscale opacity-40"
+                  className={`flex flex-col items-center justify-center gap-4 transition-all duration-300 rounded-2xl p-6 border border-slate-800 bg-slate-900 ${
+                    selectedBrand === index ? "border-yellow-400/50" : "grayscale opacity-60 hover:grayscale-0 hover:opacity-100"
                   }`}
                   aria-label={`View testimonial from ${partner.name}`}
                 >
-                  <img
-                    src={partner.logo}
-                    alt={partner.name}
-                    className="h-12 md:h-14 w-auto object-contain"
-                  />
+                  <div className="h-16 w-full flex items-center justify-center">
+                    <img
+                      src={partner.logo}
+                      alt={`${partner.name} logo`}
+                      className="h-full w-auto max-w-full object-contain"
+                      // Add an onError handler to see if images are failing to load
+                      onError={(e) => { e.currentTarget.src = 'https://placehold.co/200x60/f87171/ffffff?text=Error'; }}
+                    />
+                  </div>
+                  <span className="text-base font-bold text-center leading-tight">{partner.name}</span>
                 </button>
               ))}
             </div>
-
-            <p className="text-center mt-12 text-sm text-gray-400">
-              Click on any brand logo to read their testimonial
-            </p>
           </div>
         </section>
 
@@ -988,7 +973,7 @@ export default function App() {
                     >
                       <div className="h-full rounded-3xl bg-slate-950/90 backdrop-blur-xl p-8 md:p-12 flex flex-col md:flex-row gap-8 items-center">
                         <div className="flex-1 flex flex-col justify-center">
-                          <div className="inline-block mb-4 px-4 py-1.5 rounded-full bg-white/[0.05] border border-white/10 text-xs font-semibold text-white w-fit">
+                          <div className="inline-block mb-4 px-4 py-1.5 rounded-full bg-white/[0.05] border border-white/10 text-xs font-semibold text-chart-5 w-fit">
                             {p.category}
                           </div>
                           <h3 className="project-title text-4xl md:text-5xl font-black text-white mb-6 leading-tight">
@@ -1003,11 +988,15 @@ export default function App() {
                             <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
                           </a>
                         </div>
-
+                        
+                        {/* --- JSX FOR VIDEO UPDATED HERE --- */}
                         <div className="project-image w-full md:w-1/2 rounded-2xl aspect-video relative overflow-hidden border-2 border-white/10 shadow-xl">
-                          <img
-                            src={p.image}
-                            alt={p.title}
+                          <video
+                            src={p.video}
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
                             className="w-full h-full object-cover"
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 to-transparent" />
@@ -1031,8 +1020,7 @@ export default function App() {
                       href="#quote"
                       className="inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-yellow-400 to-amber-300 px-10 py-5 text-lg font-bold text-slate-950 shadow-2xl shadow-yellow-400/30 hover:shadow-yellow-400/50 hover:scale-105 transition-all"
                     >
-                      🚀 Let’s Build Yours
-                      
+                       Let’s Build Yours
                     </a>
                   </div>
                 </div>
@@ -1064,7 +1052,7 @@ export default function App() {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit}>
-                    <p className="text-center text-gray-300 mb-8 font-medium">Let’s talk ideas, timelines, and transformations.</p>
+                  <p className="text-center text-gray-300 mb-8 font-medium">Let’s talk ideas, timelines, and transformations.</p>
                   <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
                     <InputField
                       label="Name"
@@ -1112,7 +1100,7 @@ export default function App() {
                     disabled={formStatus.submitting}
                     className="mt-8 w-full rounded-full bg-gradient-to-r from-yellow-400 to-amber-300 px-8 py-4 text-base font-bold text-slate-950 shadow-lg shadow-yellow-400/30 hover:shadow-yellow-400/50 hover:scale-[1.02] transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
-                    {formStatus.submitting ? "Sending..." : "🟡 Launch My Project"}
+                    {formStatus.submitting ? "Sending..." : " Launch My Project"}
                   </button>
                 </form>
               )}
