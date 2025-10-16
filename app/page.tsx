@@ -815,7 +815,7 @@ export default function App() {
 
       <Header siteName={DATA.siteName} navLinks={DATA.navLinks} ctaPrimary={DATA.ctaPrimary} />
 
-      <AIChat />
+      {/* <AIChat /> */}
 
       <main className="pt-20">
         <section ref={heroRef} className="relative overflow-hidden min-h-screen flex items-center">
