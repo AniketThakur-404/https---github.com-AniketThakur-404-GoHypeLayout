@@ -640,6 +640,14 @@ const Footer = ({ siteName, contact, social }: any) => (
   </footer>
 )
 
+const BUDGET_OPTIONS = [
+  "500$ - 1000$",
+  "1000$ - 2000$",
+  "2000$ - 5000$",
+  "5000$ - 7000$",
+  "7000$ - 10000$",
+]
+
 const InputField = ({ label, name, type = "text", value, onChange, placeholder, className }: any) => (
   <div className={className}>
     <label htmlFor={name} className="sr-only">
@@ -654,6 +662,32 @@ const InputField = ({ label, name, type = "text", value, onChange, placeholder, 
       placeholder={placeholder}
       className="w-full rounded-xl border border-white/10 bg-white/5 px-5 py-3.5 text-white placeholder:text-gray-500 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/20 transition-all"
     />
+  </div>
+)
+
+const SelectField = ({ label, name, value, onChange, options, placeholder, className }: any) => (
+  <div className={className}>
+    <label htmlFor={name} className="sr-only">
+      {label}
+    </label>
+    <select
+      id={name}
+      name={name}
+      value={value}
+      onChange={onChange}
+      className={`w-full rounded-xl border border-white/10 bg-white/5 px-5 py-3.5 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/20 transition-all ${value ? "text-white" : "text-gray-500"}`}
+    >
+      {placeholder && (
+        <option value="" disabled>
+          {placeholder}
+        </option>
+      )}
+      {options.map((option: string) => (
+        <option key={option} value={option}>
+          {option}
+        </option>
+      ))}
+    </select>
   </div>
 )
 
@@ -686,6 +720,7 @@ export default function App() {
   const projectsRef = useRef<HTMLElement>(null);
   const partnersRef = useRef<HTMLElement>(null);
   const spotlightRef = useRef<HTMLDivElement>(null);
+  const thankYouRef = useRef<HTMLDivElement>(null);
 
   // --- GSAP ANIMATIONS ---
   useEffect(() => {
@@ -770,8 +805,14 @@ export default function App() {
     };
   }, []);
 
+  useEffect(() => {
+    if (formStatus.submitted && thankYouRef.current) {
+      thankYouRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [formStatus.submitted]);
+
   // --- HANDLER FUNCTIONS ---
-  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -870,11 +911,13 @@ export default function App() {
                       onChange={handleFormChange}
                       placeholder="Company Name"
                     />
-                    <InputField
+                    <SelectField
+                      label="Budget"
                       name="budget"
                       value={formData.budget}
                       onChange={handleFormChange}
-                      placeholder="Project Budget"
+                      options={BUDGET_OPTIONS}
+                      placeholder="Select Project Budget"
                     />
                     <button
                       type="submit"
@@ -1051,7 +1094,7 @@ export default function App() {
             </div>
             <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-10 shadow-2xl backdrop-blur-xl">
               {formStatus.submitted ? (
-                <div className="text-center py-16">
+                <div ref={thankYouRef} className="text-center py-16">
                   <div className="mx-auto w-20 h-20 rounded-full bg-green-500/10 flex items-center justify-center mb-6">
                     <svg className="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -1088,12 +1131,13 @@ export default function App() {
                     placeholder="Your Company / Brand"
                     className="mt-5"
                   />
-                  <InputField
+                  <SelectField
                     label="Budget"
                     name="budget"
                     value={formData.budget}
                     onChange={handleFormChange}
-                    placeholder="Project Budget or Scope"
+                    options={BUDGET_OPTIONS}
+                    placeholder="Select Project Budget"
                     className="mt-5"
                   />
                   <TextAreaField
