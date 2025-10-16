@@ -6,9 +6,9 @@ import './globals.css'
 import CursorSpotlight from '../components/cursor-spotlight'
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.app',
+  title: 'Gohype',
+  description: 'Created by Gohype',
+  generator: '',
 }
 
 export default function RootLayout({
