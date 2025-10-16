@@ -6,6 +6,7 @@ import * as THREE from "three"
 import { Menu, Code, PenTool, Wind, ArrowRight, Star, MessageCircle, X, Send } from "lucide-react"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import { sendEmail } from "./actions" // This imports your server-side function
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger)
@@ -13,8 +14,8 @@ if (typeof window !== "undefined") {
 
 // --- DATA OBJECT ---
 const DATA = {
-  siteName: "GoHype Media",
-  tagline: "Experience the Future of the Web in 3D.",
+  siteName: "Go Hype Media",
+  tagline: "Experience the Future of the Web in 3D",
   subTagline:
     "We build immersive, next gen websites powered by Three.js, WebGL, and bold interaction design. Turn your online presence into an experience that moves, breathes, and sells.",
   ctaPrimary: { label: "Request a Quote", href: "#quote" },
@@ -113,32 +114,35 @@ const DATA = {
       icon: <Wind size={24} />,
     },
   ],
-  // --- PROJECT DATA UPDATED HERE ---
-  projects: [
+   projects: [
     {
-      category: "Sports & Recreation",
-      title: "Deuce Arena",
-      description:
-        "An immersive hero section for a premier Padel and Pickleball club. The animated 3D racket and ball capture the dynamic energy of the sport, creating an engaging first impression for visitors.",
-      video: "/videos/deuce.mp4",
-      bgColor: "from-green-400 to-teal-500",
-    },
-    {
-      category: "Health & Wellness",
-      title: "Fizzix Super Garcinia",
-      description:
-        "A vibrant and energetic product showcase for a health supplement. We used captivating motion graphics and a scroll-based animation to guide users through the product's features and benefits.",
-      video: "/videos/fizzix.mp4",
-      bgColor: "from-lime-400 to-green-500",
-    },
-    {
-      category: "Fashion & Apparel",
-      title: "Delan Fashion",
-      description:
-        "A minimalist yet sophisticated animation for a modern fashion brand. The subtle 3D rotation and text reveals create an elegant and high-end feel, perfectly aligning with the brand's aesthetic.",
-      video: "/videos/delan.mp4",
-      bgColor: "from-stone-400 to-neutral-500",
-    },
+     "category": "Sports & Recreation",
+     "video": "/videos/deuce.mp4"
+   },
+   {
+     "category": "Food & Beverage",
+     "video": "/videos/fizzix.mp4"
+   },
+   {
+     "category": "Lifestyle & Culture",
+     "video": "/videos/delan.mp4"
+   },
+   {
+     "category": "Technology & Innovation",
+     "video": "/videos/katana.mp4"
+   },
+   {
+     "category": "Creative & Digital",
+     "video": "/videos/cappen.mp4"
+   },
+   {
+     "category": "Technology & Innovation",
+     "video": "/videos/shaga.mp4"
+   },
+   {
+     "category": "Entertainment & Media",
+     "video": "/videos/coundex.mp4"
+   }
   ],
   social: [
     { label: "Facebook", href: "#" },
@@ -506,7 +510,6 @@ const Header = ({ siteName, navLinks, ctaPrimary }: any) => {
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 md:px-8">
         <a href="#" className="flex items-center gap-3 group" aria-label="Go home">
-          {/* LOGO CHANGE HERE */}
           <img
             src="/logo.png"
             alt={`${siteName} logo`}
@@ -572,7 +575,6 @@ const Footer = ({ siteName, contact, social }: any) => (
       <div className="grid grid-cols-1 gap-12 md:grid-cols-4">
         <div className="md:col-span-2">
           <div className="flex items-center gap-3 mb-6">
-            {/* LOGO CHANGE HERE */}
             <img
               src="/logo.png"
               alt={`${siteName} logo`}
@@ -673,42 +675,45 @@ const TextAreaField = ({ label, name, value, onChange, placeholder, className, r
 )
 
 export default function App() {
-  const [formStatus, setFormStatus] = useState({ submitting: false, submitted: false })
-  const [formData, setFormData] = useState({ name: "", email: "", company: "", budget: "", message: "" })
-  const [selectedBrand, setSelectedBrand] = useState<number | null>(0)
+  // --- STATE MANAGEMENT ---
+  const [formStatus, setFormStatus] = useState({ submitting: false, submitted: false, error: "" });
+  const [formData, setFormData] = useState({ name: "", email: "", company: "", budget: "", message: "" });
+  const [selectedBrand, setSelectedBrand] = useState<number | null>(0);
 
-  const heroRef = useRef<HTMLDivElement>(null)
-  const servicesRef = useRef<HTMLElement>(null)
-  const projectsRef = useRef<HTMLElement>(null)
-  const partnersRef = useRef<HTMLElement>(null)
-  const spotlightRef = useRef<HTMLDivElement>(null)
+  // --- REFS FOR ANIMATIONS ---
+  const heroRef = useRef<HTMLDivElement>(null);
+  const servicesRef = useRef<HTMLElement>(null);
+  const projectsRef = useRef<HTMLElement>(null);
+  const partnersRef = useRef<HTMLElement>(null);
+  const spotlightRef = useRef<HTMLDivElement>(null);
 
+  // --- GSAP ANIMATIONS ---
   useEffect(() => {
     if (heroRef.current) {
       gsap.fromTo(
         heroRef.current.querySelector(".hero-content"),
         { opacity: 0, y: 50 },
-        { opacity: 1, y: 0, duration: 1, delay: 0.3, ease: "power3.out" },
-      )
+        { opacity: 1, y: 0, duration: 1, delay: 0.3, ease: "power3.out" }
+      );
 
       gsap.fromTo(
         heroRef.current.querySelector(".hero-form"),
         { opacity: 0, x: 50 },
-        { opacity: 1, x: 0, duration: 1, delay: 0.5, ease: "power3.out" },
-      )
+        { opacity: 1, x: 0, duration: 1, delay: 0.5, ease: "power3.out" }
+      );
     }
 
     const handleMouseMove = (e: MouseEvent) => {
       if (spotlightRef.current) {
-        spotlightRef.current.style.left = `${e.clientX}px`
-        spotlightRef.current.style.top = `${e.clientY}px`
+        spotlightRef.current.style.left = `${e.clientX}px`;
+        spotlightRef.current.style.top = `${e.clientY}px`;
       }
-    }
+    };
 
-    window.addEventListener("mousemove", handleMouseMove)
+    window.addEventListener("mousemove", handleMouseMove);
 
     if (servicesRef.current) {
-      const serviceCards = servicesRef.current.querySelectorAll(".service-card")
+      const serviceCards = servicesRef.current.querySelectorAll(".service-card");
       gsap.fromTo(
         serviceCards,
         { opacity: 0, y: 60 },
@@ -724,12 +729,12 @@ export default function App() {
             end: "bottom 20%",
             toggleActions: "play none none reverse",
           },
-        },
-      )
+        }
+      );
     }
 
     if (partnersRef.current) {
-      const partnerLogos = partnersRef.current.querySelectorAll(".partner-logo")
+      const partnerLogos = partnersRef.current.querySelectorAll(".partner-logo");
       gsap.fromTo(
         partnerLogos,
         { opacity: 0, scale: 0.8, y: 30 },
@@ -746,40 +751,50 @@ export default function App() {
             end: "bottom 20%",
             toggleActions: "play none none reverse",
           },
-        },
-      )
+        }
+      );
     }
 
     document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-        anchor.addEventListener("click", function (e) {
-          e.preventDefault()
-          const target = document.querySelector((e.currentTarget as HTMLAnchorElement).getAttribute("href")!)
-          if (target) {
-            target.scrollIntoView({ behavior: "smooth", block: "start" })
-          }
-        })
-      })
+      anchor.addEventListener("click", function (e) {
+        e.preventDefault();
+        const target = document.querySelector((e.currentTarget as HTMLAnchorElement).getAttribute("href")!);
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+    });
 
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove)
-    }
-  }, [])
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, []);
 
+  // --- HANDLER FUNCTIONS ---
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value })
+    setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    setFormStatus({ submitting: true, submitted: false })
-    console.log("Form submitted:", formData)
-    setTimeout(() => {
-      setFormStatus({ submitting: false, submitted: true })
-    }, 1500)
-  }
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormStatus({ submitting: true, submitted: false, error: "" });
+    
+    // Call the server action with the form data
+    const result = await sendEmail(formData);
+
+    if (result && result.error) {
+      // If there's an error, update the state to show it
+      setFormStatus({ submitting: false, submitted: false, error: result.error });
+      return;
+    }
+    
+    // On success, update the state and clear the form
+    setFormStatus({ submitting: false, submitted: true, error: "" });
+    setFormData({ name: "", email: "", company: "", budget: "", message: "" });
+  };
 
   const handleBrandClick = (index: number) => {
-    setSelectedBrand(index === selectedBrand ? null : index)
-  }
+    setSelectedBrand(index === selectedBrand ? null : index);
+  };
 
   return (
     <div className="min-h-screen bg-slate-950 text-white selection:bg-yellow-400/20">
@@ -800,7 +815,7 @@ export default function App() {
 
       <Header siteName={DATA.siteName} navLinks={DATA.navLinks} ctaPrimary={DATA.ctaPrimary} />
 
-      {/* <AIChat /> */}
+      <AIChat />
 
       <main className="pt-20">
         <section ref={heroRef} className="relative overflow-hidden min-h-screen flex items-center">
@@ -863,9 +878,10 @@ export default function App() {
                     />
                     <button
                       type="submit"
+                      disabled={formStatus.submitting}
                       className="w-full rounded-full bg-gradient-to-r from-yellow-400 to-amber-300 px-8 py-4 text-base font-bold text-slate-950 shadow-lg shadow-yellow-400/30 hover:shadow-yellow-400/50 hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      Request a Quote
+                      {formStatus.submitting ? "Sending..." : "Request a Quote"}
                     </button>
                   </form>
                 </div>
@@ -873,11 +889,12 @@ export default function App() {
             </div>
           </div>
         </section>
- <section id="partners" className="bg-slate-950 text-white py-24 sm:py-32">
+        
+        <section id="partners" ref={partnersRef} className="bg-slate-950 text-white py-24 sm:py-32">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="text-center mb-16 sm:mb-20">
               <h2 className="text-4xl font-black tracking-tight leading-loose sm:text-5xl md:text-6xl bg-gradient-to-br from-yellow-400 to-amber-300 bg-clip-text text-transparent">
-                Trusted by Visionaries.
+                Trusted by Visionaries
               </h2>
             </div>
             {selectedBrand !== null && DATA.partners[selectedBrand] && (
@@ -905,7 +922,7 @@ export default function App() {
                 <button
                   key={partner.name}
                   onClick={() => handleBrandClick(index)}
-                  className={`flex flex-col items-center justify-center gap-4 transition-all duration-300 rounded-2xl p-6 border border-slate-800 bg-slate-900 ${
+                  className={`partner-logo flex flex-col items-center justify-center gap-4 transition-all duration-300 rounded-2xl p-6 border border-slate-800 bg-slate-900 ${
                     selectedBrand === index ? "border-yellow-400/50" : "grayscale opacity-60 hover:grayscale-0 hover:opacity-100"
                   }`}
                   aria-label={`View testimonial from ${partner.name}`}
@@ -915,7 +932,6 @@ export default function App() {
                       src={partner.logo}
                       alt={`${partner.name} logo`}
                       className="h-full w-auto max-w-full object-contain"
-                      // Add an onError handler to see if images are failing to load
                       onError={(e) => { e.currentTarget.src = 'https://placehold.co/200x60/f87171/ffffff?text=Error'; }}
                     />
                   </div>
@@ -929,7 +945,7 @@ export default function App() {
         <section ref={servicesRef} id="services" className="mx-auto max-w-7xl px-6 py-24 md:px-8 lg:py-32">
           <div className="mx-auto max-w-3xl text-center mb-20">
             <h2 className="text-5xl font-black tracking-tight md:text-6xl bg-gradient-to-br from-yellow-400 to-amber-300 bg-clip-text text-transparent">
-              Engineering the Web of Tomorrow.
+              Engineering the Web of Tomorrow
             </h2>
             <p className="mt-5 text-xl text-gray-400 leading-relaxed">
               We design and develop immersive 3D web experiences that redefine how users see and interact with brands. Every element is built to move, react, and feel alive.
@@ -952,54 +968,49 @@ export default function App() {
           </div>
         </section>
 
-        <section ref={projectsRef} id="work" className="bg-white/[0.02] py-24 md:py-32 border-y border-white/5">
+        
+        <section id="work" className="bg-white/[0.02] py-24 md:py-32 border-y border-white/5">
           <div className="mx-auto max-w-7xl px-6 md:px-8">
             <div className="text-center mb-20">
               <h2 className="text-5xl font-black tracking-tight md:text-6xl bg-gradient-to-br from-yellow-400 to-amber-300 bg-clip-text text-transparent mb-5">
-                Proof That Dimension Drives Results.
+                Proof That Dimension Drives Results
               </h2>
               <p className="text-xl text-gray-400 max-w-4xl mx-auto">
-                From global brands to bold startups, we’ve built 3D experiences that turn websites into interactive stories, helping businesses attract, engage, and convert like never before.
+                From global brands to bold startups, we've built 3D experiences that turn websites into interactive stories, helping businesses attract, engage, and convert like never before.
               </p>
               <p className="text-sm text-gray-400 mt-4">Scroll down to explore our projects ↓</p>
             </div>
 
-            <StackingCards totalCards={DATA.projects.length}>
+            <StackingCards>
               {DATA.projects.map((p, i) => (
-                <StackingCardItem key={i} index={i} className="h-[600px] mb-8">
-                  <div className="h-full w-full max-w-5xl mx-auto">
-                    <div
-                      className={`h-full rounded-3xl bg-gradient-to-br ${p.bgColor} p-1 shadow-2xl shadow-yellow-400/20`}
-                    >
-                      <div className="h-full rounded-3xl bg-slate-950/90 backdrop-blur-xl p-8 md:p-12 flex flex-col md:flex-row gap-8 items-center">
-                        <div className="flex-1 flex flex-col justify-center">
-                          <div className="inline-block mb-4 px-4 py-1.5 rounded-full bg-white/[0.05] border border-white/10 text-xs font-semibold text-chart-5 w-fit">
-                            {p.category}
-                          </div>
-                          <h3 className="project-title text-4xl md:text-5xl font-black text-white mb-6 leading-tight">
-                            {p.title}
-                          </h3>
-                          <p className="text-lg text-gray-400 leading-relaxed mb-8">{p.description}</p>
-                          <a
-                            href="#quote"
-                            className="inline-flex items-center gap-2 text-white font-bold hover:gap-4 transition-all duration-300 group"
-                          >
-                            Start Your Project
-                            <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
-                          </a>
-                        </div>
-                        
-                        {/* --- JSX FOR VIDEO UPDATED HERE --- */}
-                        <div className="project-image w-full md:w-1/2 rounded-2xl aspect-video relative overflow-hidden border-2 border-white/10 shadow-xl">
+                <StackingCardItem key={i} index={i} className="h-[700px] mb-12">
+                  <div className="h-full w-full max-w-6xl mx-auto">
+                    <div className="h-full rounded-3xl bg-gradient-to-br from-yellow-400/10 to-amber-300/5 p-1 shadow-2xl shadow-yellow-400/20">
+                      <div className="h-full rounded-3xl bg-slate-950/95 backdrop-blur-xl overflow-hidden">
+                        <div className="relative w-full h-full rounded-2xl overflow-hidden">
                           <video
                             src={p.video}
                             autoPlay
                             loop
                             muted
                             playsInline
-                            className="w-full h-full object-cover"
+                            className="absolute inset-0 w-full h-full object-cover"
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 to-transparent" />
+                          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/40 via-transparent to-slate-950/60" />
+                          
+                          <div className="absolute top-8 left-8 px-4 py-2 rounded-full bg-slate-950/80 backdrop-blur-md border border-white/20 text-sm font-semibold text-white">
+                            {p.category}
+                          </div>
+                          
+                          <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
+                            <a
+                              href="#quote"
+                              className="inline-flex items-center gap-2 px-8 py-3 rounded-full bg-gradient-to-r from-yellow-400 to-amber-300 text-slate-950 font-bold hover:gap-4 hover:scale-105 transition-all duration-300 group shadow-lg shadow-yellow-400/30"
+                            >
+                              Start Your Project
+                              <ArrowRight className="group-hover:translate-x-1 transition-transform" size={18} />
+                            </a>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -1007,8 +1018,8 @@ export default function App() {
                 </StackingCardItem>
               ))}
 
-              <StackingCardItem index={DATA.projects.length} className="h-[600px] mb-8">
-                <div className="h-full w-full max-w-5xl mx-auto flex items-center justify-center">
+              <StackingCardItem index={DATA.projects.length} className="h-[700px] mb-12">
+                <div className="h-full w-full max-w-6xl mx-auto flex items-center justify-center">
                   <div className="text-center">
                     <h3 className="text-7xl leading-loose md:text-9xl font-black bg-gradient-to-br from-yellow-400 to-amber-300 bg-clip-text text-transparent mb-8">
                       Ready?
@@ -1020,7 +1031,7 @@ export default function App() {
                       href="#quote"
                       className="inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-yellow-400 to-amber-300 px-10 py-5 text-lg font-bold text-slate-950 shadow-2xl shadow-yellow-400/30 hover:shadow-yellow-400/50 hover:scale-105 transition-all"
                     >
-                       Let’s Build Yours
+                      Let's Build Yours
                     </a>
                   </div>
                 </div>
@@ -1028,12 +1039,11 @@ export default function App() {
             </StackingCards>
           </div>
         </section>
-
         <section id="quote" className="bg-slate-950 py-24 md:py-32">
           <div className="mx-auto max-w-4xl px-6 md:px-8">
             <div className="text-center mb-16">
               <h2 className="text-5xl font-black tracking-tight md:text-6xl bg-gradient-to-br from-yellow-400 to-amber-300 bg-clip-text text-transparent mb-6">
-                Let’s Build Your 3D Universe.
+                Let’s Build Your 3D Universe
               </h2>
               <p className="text-xl text-gray-400 max-w-2xl mx-auto">
                 Ready to create an experience that turns visitors into believers? Whether you’re a startup or an established brand, we’ll bring your vision to life.
@@ -1095,6 +1105,10 @@ export default function App() {
                     className="mt-5"
                     rows={5}
                   />
+                  
+                  {/* --- THIS IS WHERE THE ERROR MESSAGE WILL APPEAR --- */}
+                  {formStatus.error && <p className="text-red-500 text-center mt-6">{formStatus.error}</p>}
+
                   <button
                     type="submit"
                     disabled={formStatus.submitting}
