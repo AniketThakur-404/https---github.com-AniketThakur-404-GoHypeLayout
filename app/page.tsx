@@ -1,168 +1,157 @@
-"use client"
+'use client'
 
-import type React from "react"
-import { useEffect, useRef, useState } from "react"
-import * as THREE from "three"
-import { Menu, Code, PenTool, Wind, ArrowRight, Star, MessageCircle, X, Send } from "lucide-react"
-import gsap from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
-import { sendEmail } from "./actions" // This imports your server-side function
+export const dynamic = 'force-dynamic'
 
-if (typeof window !== "undefined") {
+import type React from 'react'
+import { Suspense, useEffect, useRef, useState } from 'react'
+import * as THREE from 'three'
+import { Menu, Code, PenTool, Wind, ArrowRight, MessageCircle, X, Send } from 'lucide-react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { sendEmail } from './actions' // server action
+
+if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger)
 }
 
+declare global {
+  interface Window {
+    gtag?: (...args: any[]) => void
+  }
+}
+
+const GA_ID = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID
+const ADS_SEND_TO = process.env.NEXT_PUBLIC_GOOGLE_ADS_SEND_TO // e.g. "AW-17680977187/ABC123def456"
+
 // --- DATA OBJECT ---
 const DATA = {
-  siteName: "Go Hype Media",
-  tagline: "Experience the Future of the Web in 3D",
+  siteName: 'Go Hype Media',
+  tagline: 'Experience the Future of the Web in 3D',
   subTagline:
-    "We build immersive, next gen websites powered by Three.js, WebGL, and bold interaction design. Turn your online presence into an experience that moves, breathes, and sells.",
-  ctaPrimary: { label: "Request a Quote", href: "#quote" },
-  ctaSecondary: { label: "View Work", href: "#work" },
+    'We build immersive, next gen websites powered by Three.js, WebGL, and bold interaction design. Turn your online presence into an experience that moves, breathes, and sells.',
+  ctaPrimary: { label: 'Request a Quote', href: '#quote' },
+  ctaSecondary: { label: 'View Work', href: '#work' },
   contact: {
-    phone: "+91-8447788703",
-    email: "info@gohypemedia.com",
-    address: "New Delhi, India",
-    hours: "Mon–Sat | 10 AM – 6:30 PM",
+    phone: '+91-8447788703',
+    email: 'info@gohypemedia.com',
+    address: 'New Delhi, India',
+    hours: 'Mon–Sat | 10 AM – 6:30 PM',
   },
   navLinks: [
-    { href: "#services", label: "Services" },
-    { href: "#work", label: "Work" },
-    { href: "#partners", label: "Partners" },
-    { href: "#quote", label: "Contact" },
+    { href: '#services', label: 'Services' },
+    { href: '#work', label: 'Work' },
+    { href: '#partners', label: 'Partners' },
+    { href: '#quote', label: 'Contact' },
   ],
   partners: [
     {
-      name: "Unseen Studios",
-      logo: "/logos/unseen-studios.png", // Using local logo
+      name: 'Unseen Studios',
+      logo: '/logos/unseen-studios.png',
       testimonial: {
-        text: "Partnering with GoHype was a turning point. Our 3D website isn’t just a site — it’s a story that our audience interacts with. The blend of design and depth made us stand out instantly.",
-        author: "Michael Chen",
-        position: "Digital Lead, Unseen Studios",
+        text: 'Partnering with GoHype was a turning point. Our 3D website isn’t just a site — it’s a story that our audience interacts with. The blend of design and depth made us stand out instantly.',
+        author: 'Michael Chen',
+        position: 'Digital Lead, Unseen Studios',
         rating: 5,
       },
     },
     {
-      name: "Palmolive",
-      logo: "/logos/palmolive.png", // Using local logo
+      name: 'Palmolive',
+      logo: '/logos/palmolive.png',
       testimonial: {
-        text: "GoHype Media transformed our digital presence with stunning 3D product visualizations. The attention to detail and creative execution exceeded our expectations.",
-        author: "Sarah Johnson",
-        position: "Marketing Director, Palmolive",
+        text: 'GoHype Media transformed our digital presence with stunning 3D product visualizations. The attention to detail and creative execution exceeded our expectations.',
+        author: 'Sarah Johnson',
+        position: 'Marketing Director, Palmolive',
         rating: 5,
       },
     },
     {
-      name: "Kohler",
-      logo: "/logos/kohler.png", // Using local logo
+      name: 'Kohler',
+      logo: '/logos/kohler.png',
       testimonial: {
-        text: "The team delivered a premium web experience that perfectly captures our luxury brand essence. The 3D configurator they built has significantly increased customer engagement.",
-        author: "Emily Rodriguez",
-        position: "VP of Digital, Kohler",
+        text: 'The team delivered a premium web experience that perfectly captures our luxury brand essence. The 3D configurator they built has significantly increased customer engagement.',
+        author: 'Emily Rodriguez',
+        position: 'VP of Digital, Kohler',
         rating: 5,
       },
     },
     {
-      name: "Nestle",
-      logo: "/logos/nestle.png", // Using local logo
+      name: 'Nestle',
+      logo: '/logos/nestle.png',
       testimonial: {
         text: "GoHype Media's expertise in motion design and modern UI helped us launch a campaign that resonated with millions. Their professionalism and creativity are unmatched.",
-        author: "David Park",
-        position: "Brand Manager, Nestle",
+        author: 'David Park',
+        position: 'Brand Manager, Nestle',
         rating: 5,
       },
     },
     {
-      name: "Dabur",
-      logo: "/logos/dabur.png", // Using local logo
+      name: 'Dabur',
+      logo: '/logos/dabur.png',
       testimonial: {
-        text: "From concept to execution, GoHype delivered excellence. The interactive elements they created have dramatically improved our user engagement and conversion rates.",
-        author: "Priya Sharma",
-        position: "Head of Digital Marketing, Dabur",
+        text: 'From concept to execution, GoHype delivered excellence. The interactive elements they created have dramatically improved our user engagement and conversion rates.',
+        author: 'Priya Sharma',
+        position: 'Head of Digital Marketing, Dabur',
         rating: 5,
       },
     },
     {
-      name: "Cerelac",
-      logo: "/logos/cerelac.png", // Using local logo
+      name: 'Cerelac',
+      logo: '/logos/cerelac.png',
       testimonial: {
-        text: "The modern, playful design GoHype created perfectly aligns with our brand values. Their technical skills combined with creative vision make them our go to agency.",
-        author: "James Wilson",
-        position: "Product Marketing Lead, Cerelac",
+        text: 'The modern, playful design GoHype created perfectly aligns with our brand values. Their technical skills combined with creative vision make them our go to agency.',
+        author: 'James Wilson',
+        position: 'Product Marketing Lead, Cerelac',
         rating: 5,
       },
     },
   ],
   services: [
     {
-      title: "3D Website Development",
+      title: '3D Website Development',
       description:
-        "Transform your digital space into an interactive dimension. From concept to code, we craft high performance 3D websites powered by advanced rendering and seamless motion.",
+        'Transform your digital space into an interactive dimension. From concept to code, we craft high performance 3D websites powered by advanced rendering and seamless motion.',
       icon: <Code size={24} />,
     },
     {
-      title: "Immersive UI/UX Design",
+      title: 'Immersive UI/UX Design',
       description:
-        "Intuitive layouts meet futuristic aesthetics. We design experiences that guide users through motion, depth, and flow — not just pages.",
+        'Intuitive layouts meet futuristic aesthetics. We design experiences that guide users through motion, depth, and flow — not just pages.',
       icon: <PenTool size={24} />,
     },
     {
-      title: "Web Performance & Optimization",
+      title: 'Web Performance & Optimization',
       description:
-        "Visual brilliance means nothing without speed. Our websites load fast, perform smoothly, and are optimized for every device and browser.",
+        'Visual brilliance means nothing without speed. Our websites load fast, perform smoothly, and are optimized for every device and browser.',
       icon: <Wind size={24} />,
     },
   ],
-   projects: [
-    {
-     "category": "Sports & Recreation",
-     "video": "/videos/deuce.mp4"
-   },
-   {
-     "category": "Food & Beverage",
-     "video": "/videos/fizzix.mp4"
-   },
-   {
-     "category": "Lifestyle & Culture",
-     "video": "/videos/delan.mp4"
-   },
-   {
-     "category": "Technology & Innovation",
-     "video": "/videos/katana.mp4"
-   },
-   {
-     "category": "Creative & Digital",
-     "video": "/videos/cappen.mp4"
-   },
-   {
-     "category": "Technology & Innovation",
-     "video": "/videos/shaga.mp4"
-   },
-   {
-     "category": "Entertainment & Media",
-     "video": "/videos/coundex.mp4"
-   }
+  projects: [
+    { category: 'Sports & Recreation', video: '/videos/deuce.mp4' },
+    { category: 'Food & Beverage', video: '/videos/fizzix.mp4' },
+    { category: 'Lifestyle & Culture', video: '/videos/delan.mp4' },
+    { category: 'Technology & Innovation', video: '/videos/katana.mp4' },
+    { category: 'Creative & Digital', video: '/videos/cappen.mp4' },
+    { category: 'Technology & Innovation', video: '/videos/shaga.mp4' },
+    { category: 'Entertainment & Media', video: '/videos/coundex.mp4' },
   ],
   social: [
-    { label: "Facebook", href: "#" },
-    { label: "Instagram", href: "#" },
-    { label: "LinkedIn", href: "#" },
-    { label: "YouTube", href: "#" },
+    { label: 'Facebook', href: '#' },
+    { label: 'Instagram', href: '#' },
+    { label: 'LinkedIn', href: '#' },
+    { label: 'YouTube', href: '#' },
   ],
 }
 
 // Simple Stacking Cards Components
-function StackingCards({ children, totalCards }: { children: React.ReactNode; totalCards: number }) {
+function StackingCards({ children }: { children: React.ReactNode }) {
   return <div className="relative">{children}</div>
 }
 
-function StackingCardItem({ children, index, className = "" }: any) {
+function StackingCardItem({ children, className = '' }: any) {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!ref.current) return
-
     gsap.fromTo(
       ref.current,
       { opacity: 0, y: 100 },
@@ -171,8 +160,8 @@ function StackingCardItem({ children, index, className = "" }: any) {
         y: 0,
         scrollTrigger: {
           trigger: ref.current,
-          start: "top 90%",
-          end: "top 50%",
+          start: 'top 90%',
+          end: 'top 50%',
           scrub: 1,
         },
       }
@@ -187,47 +176,43 @@ function StackingCardItem({ children, index, className = "" }: any) {
 }
 
 // Simple GlowCard Component
-function GlowCard({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+function GlowCard({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={`service-card rounded-3xl bg-white/[0.03] border border-white/10 backdrop-blur-xl hover:border-primary/30 transition-all duration-300 ${className}`}>
+    <div className={`service-card rounded-3xl bg-white/[0.03] border border-white/10 backdrop-blur-xl hover:border-yellow-400/30 transition-all duration-300 ${className}`}>
       {children}
     </div>
   )
 }
 
-// AI Chat Component
+// AI Chat Component (kept but not mounted)
 function AIChat() {
   const [isOpen, setIsOpen] = useState(false)
   const [messages, setMessages] = useState<Array<{ text: string; isUser: boolean }>>([
-    { text: "Hi! How can I help you today?", isUser: false },
+    { text: 'Hi! How can I help you today?', isUser: false },
   ])
-  const [input, setInput] = useState("")
+  const [input, setInput] = useState('')
 
   const handleSend = () => {
     if (!input.trim()) return
-    setMessages([...messages, { text: input, isUser: true }])
+    setMessages((prev) => [...prev, { text: input, isUser: true }])
     const userMessage = input.toLowerCase()
-    setInput("")
+    setInput('')
 
     setTimeout(() => {
       let botResponse = "I'm sorry, I didn't understand that. Could you rephrase?"
 
-      if (userMessage.includes("services")) {
-        botResponse = `We offer the following services: ${DATA.services
-          .map((service) => service.title)
-          .join(", ")}.`
-      } else if (userMessage.includes("contact")) {
+      if (userMessage.includes('services')) {
+        botResponse = `We offer the following services: ${DATA.services.map((s) => s.title).join(', ')}.`
+      } else if (userMessage.includes('contact')) {
         botResponse = `You can reach us at ${DATA.contact.email} or call us at ${DATA.contact.phone}.`
-      } else if (userMessage.includes("projects")) {
-        botResponse = `Here are some of our projects: ${DATA.projects
-          .map((project) => project.title)
-          .join(", ")}.`
-      } else if (userMessage.includes("testimonial")) {
-        botResponse = `Here's what our clients say: \"${DATA.partners[0].testimonial.text}\" - ${DATA.partners[0].testimonial.author}`
+      } else if (userMessage.includes('projects')) {
+        botResponse = `We work across categories like ${DATA.projects.map((p) => p.category).join(', ')}.`
+      } else if (userMessage.includes('testimonial')) {
+        botResponse = `Here's what our clients say: "${DATA.partners[0].testimonial.text}" - ${DATA.partners[0].testimonial.author}`
       }
 
       setMessages((prev) => [...prev, { text: botResponse, isUser: false }])
-    }, 1000)
+    }, 500)
   }
 
   return (
@@ -244,21 +229,17 @@ function AIChat() {
       {/* Chat Window */}
       {isOpen && (
         <div className="fixed bottom-24 right-6 z-50 w-96 max-w-[calc(100vw-3rem)] h-[500px] rounded-3xl bg-slate-950 border border-white/10 shadow-2xl flex flex-col overflow-hidden">
-          {/* Header */}
           <div className="bg-gradient-to-r from-yellow-400 to-amber-300 p-4">
             <h3 className="text-lg font-bold text-slate-950">Chat with us</h3>
             <p className="text-sm text-slate-950/80">We typically reply in minutes</p>
           </div>
 
-          {/* Messages */}
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
             {messages.map((msg, i) => (
               <div key={i} className={`flex ${msg.isUser ? 'justify-end' : 'justify-start'}`}>
                 <div
                   className={`max-w-[80%] rounded-2xl px-4 py-2 ${
-                    msg.isUser
-                      ? 'bg-gradient-to-r from-yellow-400 to-amber-300 text-slate-950'
-                      : 'bg-white/10 text-white'
+                    msg.isUser ? 'bg-gradient-to-r from-yellow-400 to-amber-300 text-slate-950' : 'bg-white/10 text-white'
                   }`}
                 >
                   {msg.text}
@@ -267,16 +248,15 @@ function AIChat() {
             ))}
           </div>
 
-          {/* Input */}
           <div className="border-t border-white/10 p-4">
             <div className="flex gap-2">
               <input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+                onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                 placeholder="Type a message..."
-                className="flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-white placeholder:text-white/50 focus:border-primary focus:outline-none"
+                className="flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-white placeholder:text-white/50 focus:border-yellow-400 focus:outline-none"
               />
               <button
                 onClick={handleSend}
@@ -373,8 +353,8 @@ function ThreeBackground() {
       colors[i + 1] = 0.8 + Math.random() * 0.2
       colors[i + 2] = 0.0
     }
-    pGeo.setAttribute("position", new THREE.BufferAttribute(positions, 3))
-    pGeo.setAttribute("color", new THREE.BufferAttribute(colors, 3))
+    pGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+    pGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3))
     const pMat = new THREE.PointsMaterial({
       size: 0.025,
       vertexColors: true,
@@ -385,14 +365,17 @@ function ThreeBackground() {
     const points = new THREE.Points(pGeo, pMat)
     scene.add(points)
 
-    let mouseX = 0, mouseY = 0, targetX = 0, targetY = 0
+    let mouseX = 0,
+      mouseY = 0,
+      targetX = 0,
+      targetY = 0
 
     const onMove = (e: MouseEvent) => {
       const rect = mount.getBoundingClientRect()
       targetX = ((e.clientX - rect.left) / rect.width - 0.5) * 2
       targetY = ((e.clientY - rect.top) / rect.height - 0.5) * 2
     }
-    mount.addEventListener("mousemove", onMove)
+    mount.addEventListener('mousemove', onMove)
 
     const onResize = () => {
       if (!mount) return
@@ -401,7 +384,7 @@ function ThreeBackground() {
       camera.updateProjectionMatrix()
       renderer.setSize(clientWidth, clientHeight)
     }
-    window.addEventListener("resize", onResize)
+    window.addEventListener('resize', onResize)
 
     let frameId: number
     const tick = () => {
@@ -441,8 +424,8 @@ function ThreeBackground() {
 
     return () => {
       cancelAnimationFrame(frameId)
-      window.removeEventListener("resize", onResize)
-      if (mount) mount.removeEventListener("mousemove", onMove)
+      window.removeEventListener('resize', onResize)
+      if (mount) mount.removeEventListener('mousemove', onMove)
       if (mount && renderer.domElement.parentNode === mount) mount.removeChild(renderer.domElement)
       torusGeo.dispose()
       torusMat.dispose()
@@ -459,7 +442,7 @@ function ThreeBackground() {
   return <div ref={mountRef} className="absolute inset-0 h-full w-full" />
 }
 
-const MagneticButton = ({ children, className = "", href, ...props }: any) => {
+const MagneticButton = ({ children, className = '', href, ...props }: any) => {
   const ref = useRef<HTMLAnchorElement>(null)
   const spanRef = useRef<HTMLSpanElement>(null)
 
@@ -500,7 +483,7 @@ const Header = ({ siteName, navLinks, ctaPrimary }: any) => {
 
   useEffect(() => {
     if (!headerRef.current) return
-    gsap.fromTo(headerRef.current, { y: -100, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" })
+    gsap.fromTo(headerRef.current, { y: -100, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out' })
   }, [])
 
   return (
@@ -510,11 +493,7 @@ const Header = ({ siteName, navLinks, ctaPrimary }: any) => {
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 md:px-8">
         <a href="#" className="flex items-center gap-3 group" aria-label="Go home">
-          <img
-            src="/logo.png"
-            alt={`${siteName} logo`}
-            className="h-11 w-11 group-hover:scale-110 transition-transform duration-300"
-          />
+          <img src="/logo.png" alt={`${siteName} logo`} className="h-11 w-11 group-hover:scale-110 transition-transform duration-300" />
           <span className="text-xl font-bold tracking-tight text-white">{siteName}</span>
         </a>
 
@@ -575,11 +554,7 @@ const Footer = ({ siteName, contact, social }: any) => (
       <div className="grid grid-cols-1 gap-12 md:grid-cols-4">
         <div className="md:col-span-2">
           <div className="flex items-center gap-3 mb-6">
-            <img
-              src="/logo.png"
-              alt={`${siteName} logo`}
-              className="h-12 w-12"
-            />
+            <img src="/logo.png" alt={`${siteName} logo`} className="h-12 w-12" />
             <span className="text-xl font-bold text-white">{siteName}</span>
           </div>
           <p className="text-base text-gray-400 max-w-md leading-relaxed">
@@ -590,11 +565,13 @@ const Footer = ({ siteName, contact, social }: any) => (
           <h3 className="font-semibold text-white mb-4 text-lg">Contact</h3>
           <ul className="space-y-3 text-sm text-gray-400">
             <li>
-              <strong className="text-white">📍 Address:</strong><br />
+              <strong className="text-white">📍 Address:</strong>
+              <br />
               {contact.address}
             </li>
             <li>
-              <strong className="text-white">✉️ Email:</strong><br />
+              <strong className="text-white">✉️ Email:</strong>
+              <br />
               <a href={`mailto:${contact.email}`} className="hover:text-yellow-400 transition-colors">
                 {contact.email}
               </a>
@@ -605,13 +582,15 @@ const Footer = ({ siteName, contact, social }: any) => (
           <h3 className="font-semibold text-white mb-4 text-lg">Get in Touch</h3>
           <ul className="space-y-3 text-sm text-gray-400">
             <li>
-              <strong className="text-white">📞 Phone:</strong><br />
+              <strong className="text-white">📞 Phone:</strong>
+              <br />
               <a href={`tel:${contact.phone}`} className="hover:text-yellow-400 transition-colors">
                 {contact.phone}
               </a>
             </li>
             <li>
-              <strong className="text-white">🕐 Hours:</strong><br />
+              <strong className="text-white">🕐 Hours:</strong>
+              <br />
               {contact.hours}
             </li>
           </ul>
@@ -622,33 +601,21 @@ const Footer = ({ siteName, contact, social }: any) => (
           <span className="text-sm font-medium text-white">Let’s stay connected, we share what the future looks like:</span>
           <div className="flex gap-6">
             {social.map((s: any, i: number) => (
-              <a
-                key={i}
-                href={s.href}
-                className="text-sm text-gray-400 hover:text-yellow-400 transition-colors font-medium"
-              >
+              <a key={i} href={s.href} className="text-sm text-gray-400 hover:text-yellow-400 transition-colors font-medium">
                 {s.label}
               </a>
             ))}
           </div>
         </div>
-        <div className="text-sm text-gray-400">
-          © {new Date().getFullYear()} {siteName}. All rights reserved.
-        </div>
+        <div className="text-sm text-gray-400">© {new Date().getFullYear()} {siteName}. All rights reserved.</div>
       </div>
     </div>
   </footer>
 )
 
-const BUDGET_OPTIONS = [
-  "500$ - 1000$",
-  "1000$ - 2000$",
-  "2000$ - 5000$",
-  "5000$ - 7000$",
-  "7000$ - 10000$",
-]
+const BUDGET_OPTIONS = ['500$ - 1000$', '1000$ - 2000$', '2000$ - 5000$', '5000$ - 7000$', '7000$ - 10000$']
 
-const InputField = ({ label, name, type = "text", value, onChange, placeholder, className }: any) => (
+const InputField = ({ label, name, type = 'text', value, onChange, placeholder, className }: any) => (
   <div className={className}>
     <label htmlFor={name} className="sr-only">
       {label}
@@ -675,7 +642,7 @@ const SelectField = ({ label, name, value, onChange, options, placeholder, class
       name={name}
       value={value}
       onChange={onChange}
-      className={`w-full rounded-xl border border-white/10 bg-white/5 px-5 py-3.5 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/20 transition-all ${value ? "text-white" : "text-gray-500"}`}
+      className={`w-full rounded-xl border border-white/10 bg-white/5 px-5 py-3.5 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/20 transition-all ${value ? 'text-white' : 'text-gray-500'}`}
     >
       {placeholder && (
         <option value="" disabled>
@@ -708,47 +675,44 @@ const TextAreaField = ({ label, name, value, onChange, placeholder, className, r
   </div>
 )
 
-export default function App() {
+export function HomeApp() {
   // --- STATE MANAGEMENT ---
-  const [formStatus, setFormStatus] = useState({ submitting: false, submitted: false, error: "" });
-  const [formData, setFormData] = useState({ name: "", email: "", company: "", budget: "", message: "" });
-  const [selectedBrand, setSelectedBrand] = useState<number | null>(0);
+  const [formStatus, setFormStatus] = useState({ submitting: false, submitted: false, error: '' })
+  const [formData, setFormData] = useState({ name: '', email: '', company: '', budget: '', message: '' })
+  const [selectedBrand, setSelectedBrand] = useState<number | null>(0)
 
   // --- REFS FOR ANIMATIONS ---
-  const heroRef = useRef<HTMLDivElement>(null);
-  const servicesRef = useRef<HTMLElement>(null);
-  const projectsRef = useRef<HTMLElement>(null);
-  const partnersRef = useRef<HTMLElement>(null);
-  const spotlightRef = useRef<HTMLDivElement>(null);
-  const thankYouRef = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLDivElement>(null)
+  const servicesRef = useRef<HTMLElement>(null)
+  const partnersRef = useRef<HTMLElement>(null)
+  const spotlightRef = useRef<HTMLDivElement>(null)
+  const thankYouRef = useRef<HTMLDivElement>(null)
 
   // --- GSAP ANIMATIONS ---
   useEffect(() => {
     if (heroRef.current) {
       gsap.fromTo(
-        heroRef.current.querySelector(".hero-content"),
+        heroRef.current.querySelector('.hero-content'),
         { opacity: 0, y: 50 },
-        { opacity: 1, y: 0, duration: 1, delay: 0.3, ease: "power3.out" }
-      );
-
+        { opacity: 1, y: 0, duration: 1, delay: 0.3, ease: 'power3.out' }
+      )
       gsap.fromTo(
-        heroRef.current.querySelector(".hero-form"),
+        heroRef.current.querySelector('.hero-form'),
         { opacity: 0, x: 50 },
-        { opacity: 1, x: 0, duration: 1, delay: 0.5, ease: "power3.out" }
-      );
+        { opacity: 1, x: 0, duration: 1, delay: 0.5, ease: 'power3.out' }
+      )
     }
 
     const handleMouseMove = (e: MouseEvent) => {
       if (spotlightRef.current) {
-        spotlightRef.current.style.left = `${e.clientX}px`;
-        spotlightRef.current.style.top = `${e.clientY}px`;
+        spotlightRef.current.style.left = `${e.clientX}px`
+        spotlightRef.current.style.top = `${e.clientY}px`
       }
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
+    }
+    window.addEventListener('mousemove', handleMouseMove)
 
     if (servicesRef.current) {
-      const serviceCards = servicesRef.current.querySelectorAll(".service-card");
+      const serviceCards = servicesRef.current.querySelectorAll('.service-card')
       gsap.fromTo(
         serviceCards,
         { opacity: 0, y: 60 },
@@ -757,19 +721,19 @@ export default function App() {
           y: 0,
           duration: 0.8,
           stagger: 0.2,
-          ease: "power3.out",
+          ease: 'power3.out',
           scrollTrigger: {
             trigger: servicesRef.current,
-            start: "top 80%",
-            end: "bottom 20%",
-            toggleActions: "play none none reverse",
+            start: 'top 80%',
+            end: 'bottom 20%',
+            toggleActions: 'play none none reverse',
           },
         }
-      );
+      )
     }
 
     if (partnersRef.current) {
-      const partnerLogos = partnersRef.current.querySelectorAll(".partner-logo");
+      const partnerLogos = partnersRef.current.querySelectorAll('.partner-logo')
       gsap.fromTo(
         partnerLogos,
         { opacity: 0, scale: 0.8, y: 30 },
@@ -779,67 +743,78 @@ export default function App() {
           y: 0,
           duration: 0.7,
           stagger: 0.12,
-          ease: "back.out(1.7)",
+          ease: 'back.out(1.7)',
           scrollTrigger: {
             trigger: partnersRef.current,
-            start: "top 80%",
-            end: "bottom 20%",
-            toggleActions: "play none none reverse",
+            start: 'top 80%',
+            end: 'bottom 20%',
+            toggleActions: 'play none none reverse',
           },
         }
-      );
+      )
     }
 
-    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-      anchor.addEventListener("click", function (e) {
-        e.preventDefault();
-        const target = document.querySelector((e.currentTarget as HTMLAnchorElement).getAttribute("href")!);
-        if (target) {
-          target.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
-      });
-    });
+    const anchors = Array.from(document.querySelectorAll('a[href^="#"]'))
+    const onAnchorClick = (e: Event) => {
+      e.preventDefault()
+      const href = (e.currentTarget as HTMLAnchorElement).getAttribute('href')!
+      const target = document.querySelector(href)
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+    anchors.forEach((a) => a.addEventListener('click', onAnchorClick))
 
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-    };
-  }, []);
+      window.removeEventListener('mousemove', handleMouseMove)
+      anchors.forEach((a) => a.removeEventListener('click', onAnchorClick))
+    }
+  }, [])
 
   useEffect(() => {
     if (formStatus.submitted && thankYouRef.current) {
-      thankYouRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+      thankYouRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
-  }, [formStatus.submitted]);
+  }, [formStatus.submitted])
 
   // --- HANDLER FUNCTIONS ---
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({ ...formData, [e.target.name]: e.target.value })
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setFormStatus({ submitting: true, submitted: false, error: "" });
-    
-    // Call the server action with the form data
-    const result = await sendEmail(formData);
+    e.preventDefault()
+    setFormStatus({ submitting: true, submitted: false, error: '' })
+    const result = await sendEmail(formData)
 
     if (result && result.error) {
-      // If there's an error, update the state to show it
-      setFormStatus({ submitting: false, submitted: false, error: result.error });
-      return;
+      setFormStatus({ submitting: false, submitted: false, error: result.error })
+      return
     }
-    
-    // On success, update the state and clear the form
-    setFormStatus({ submitting: false, submitted: true, error: "" });
-    setFormData({ name: "", email: "", company: "", budget: "", message: "" });
-  };
+
+    // success UI
+    setFormStatus({ submitting: false, submitted: true, error: '' })
+    setFormData({ name: '', email: '', company: '', budget: '', message: '' })
+
+    // --- Google Ads conversion (fires only if configured) ---
+    try {
+      if (ADS_SEND_TO) {
+        window.gtag?.('event', 'conversion', { send_to: ADS_SEND_TO })
+      } else if (GA_ID) {
+        // If label not provided, warn (don’t send an invalid call)
+        console.warn('NEXT_PUBLIC_GOOGLE_ADS_SEND_TO is not set; conversion label missing, event not sent.')
+      }
+    } catch {
+      // no-op
+    }
+  }
 
   const handleBrandClick = (index: number) => {
-    setSelectedBrand(index === selectedBrand ? null : index);
-  };
+    setSelectedBrand(index === selectedBrand ? null : index)
+  }
 
   return (
     <div className="min-h-screen bg-slate-950 text-white selection:bg-yellow-400/20">
-      <style dangerouslySetInnerHTML={{__html: `
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
         #cursor-spotlight {
           position: fixed;
           width: 600px;
@@ -850,7 +825,9 @@ export default function App() {
           z-index: 1;
           transition: opacity 0.3s;
         }
-      `}} />
+      `,
+        }}
+      />
 
       <div ref={spotlightRef} id="cursor-spotlight" />
 
@@ -879,13 +856,13 @@ export default function App() {
                     href={DATA.ctaPrimary.href}
                     className="rounded-full bg-gradient-to-r from-yellow-400 to-amber-300 px-8 py-4 text-base font-bold text-slate-950 shadow-2xl shadow-yellow-400/30 hover:shadow-yellow-400/50 flex items-center gap-2"
                   >
-                     {DATA.ctaPrimary.label}
+                    {DATA.ctaPrimary.label}
                   </MagneticButton>
                   <a
                     href={DATA.ctaSecondary.href}
                     className="rounded-full border-2 border-white/10 bg-white/[0.03] backdrop-blur-xl px-8 py-4 text-base font-bold text-white hover:bg-white/[0.08] hover:border-white/20 transition-all duration-300 flex items-center gap-2"
                   >
-                     {DATA.ctaSecondary.label}
+                    {DATA.ctaSecondary.label}
                   </a>
                 </div>
               </div>
@@ -893,38 +870,18 @@ export default function App() {
               <div className="hero-form relative">
                 <div className="rounded-3xl bg-white/[0.03] border border-white/10 p-8 backdrop-blur-xl shadow-2xl">
                   <h3 className="text-center text-3xl font-bold tracking-tight text-white mb-2">Get Started Today</h3>
-                  <p className="text-center text-gray-400 mb-8">
-                    Let’s build something that makes people say “Whoa.”
-                  </p>
+                  <p className="text-center text-gray-400 mb-8">Let’s build something that makes people say “Whoa.”</p>
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <InputField name="name" value={formData.name} onChange={handleFormChange} placeholder="Your Name" />
-                    <InputField
-                      name="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleFormChange}
-                      placeholder="Email Address"
-                    />
-                    <InputField
-                      name="company"
-                      value={formData.company}
-                      onChange={handleFormChange}
-                      placeholder="Company Name"
-                    />
-                    <SelectField
-                      label="Budget"
-                      name="budget"
-                      value={formData.budget}
-                      onChange={handleFormChange}
-                      options={BUDGET_OPTIONS}
-                      placeholder="Select Project Budget"
-                    />
+                    <InputField name="email" type="email" value={formData.email} onChange={handleFormChange} placeholder="Email Address" />
+                    <InputField name="company" value={formData.company} onChange={handleFormChange} placeholder="Company Name" />
+                    <SelectField label="Budget" name="budget" value={formData.budget} onChange={handleFormChange} options={BUDGET_OPTIONS} placeholder="Select Project Budget" />
                     <button
                       type="submit"
                       disabled={formStatus.submitting}
                       className="w-full rounded-full bg-gradient-to-r from-yellow-400 to-amber-300 px-8 py-4 text-base font-bold text-slate-950 shadow-lg shadow-yellow-400/30 hover:shadow-yellow-400/50 hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {formStatus.submitting ? "Sending..." : "Request a Quote"}
+                      {formStatus.submitting ? 'Sending...' : 'Request a Quote'}
                     </button>
                   </form>
                 </div>
@@ -932,7 +889,7 @@ export default function App() {
             </div>
           </div>
         </section>
-        
+
         <section id="partners" ref={partnersRef} className="bg-slate-950 text-white py-24 sm:py-32">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="text-center mb-16 sm:mb-20">
@@ -966,7 +923,7 @@ export default function App() {
                   key={partner.name}
                   onClick={() => handleBrandClick(index)}
                   className={`partner-logo flex flex-col items-center justify-center gap-4 transition-all duration-300 rounded-2xl p-6 border border-slate-800 bg-slate-900 ${
-                    selectedBrand === index ? "border-yellow-400/50" : "grayscale opacity-60 hover:grayscale-0 hover:opacity-100"
+                    selectedBrand === index ? 'border-yellow-400/50' : 'grayscale opacity-60 hover:grayscale-0 hover:opacity-100'
                   }`}
                   aria-label={`View testimonial from ${partner.name}`}
                 >
@@ -975,7 +932,9 @@ export default function App() {
                       src={partner.logo}
                       alt={`${partner.name} logo`}
                       className="h-full w-auto max-w-full object-contain"
-                      onError={(e) => { e.currentTarget.src = 'https://placehold.co/200x60/f87171/ffffff?text=Error'; }}
+                      onError={(e) => {
+                        ;(e.currentTarget as HTMLImageElement).src = 'https://placehold.co/200x60/f87171/ffffff?text=Error'
+                      }}
                     />
                   </div>
                   <span className="text-base font-bold text-center leading-tight">{partner.name}</span>
@@ -999,9 +958,7 @@ export default function App() {
               <div key={i} className="flex items-stretch">
                 <GlowCard className="w-full">
                   <div className="p-8">
-                    <div className="mb-6 h-14 w-14 rounded-2xl bg-gradient-to-br from-yellow-400 to-amber-300 text-slate-950 flex items-center justify-center">
-                      {s.icon}
-                    </div>
+                    <div className="mb-6 h-14 w-14 rounded-2xl bg-gradient-to-br from-yellow-400 to-amber-300 text-slate-950 flex items-center justify-center">{s.icon}</div>
                     <h3 className="text-2xl font-bold text-white mb-4">{s.title}</h3>
                     <p className="text-base text-gray-400 leading-relaxed">{s.description}</p>
                   </div>
@@ -1011,7 +968,6 @@ export default function App() {
           </div>
         </section>
 
-        
         <section id="work" className="bg-white/[0.02] py-24 md:py-32 border-y border-white/5">
           <div className="mx-auto max-w-7xl px-6 md:px-8">
             <div className="text-center mb-20">
@@ -1026,25 +982,18 @@ export default function App() {
 
             <StackingCards>
               {DATA.projects.map((p, i) => (
-                <StackingCardItem key={i} index={i} className="h-[700px] mb-12">
+                <StackingCardItem key={i} className="h-[700px] mb-12">
                   <div className="h-full w-full max-w-6xl mx-auto">
                     <div className="h-full rounded-3xl bg-gradient-to-br from-yellow-400/10 to-amber-300/5 p-1 shadow-2xl shadow-yellow-400/20">
                       <div className="h-full rounded-3xl bg-slate-950/95 backdrop-blur-xl overflow-hidden">
                         <div className="relative w-full h-full rounded-2xl overflow-hidden">
-                          <video
-                            src={p.video}
-                            autoPlay
-                            loop
-                            muted
-                            playsInline
-                            className="absolute inset-0 w-full h-full object-cover"
-                          />
+                          <video src={p.video} autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover" />
                           <div className="absolute inset-0 bg-gradient-to-b from-slate-950/40 via-transparent to-slate-950/60" />
-                          
+
                           <div className="absolute top-8 left-8 px-4 py-2 rounded-full bg-slate-950/80 backdrop-blur-md border border-white/20 text-sm font-semibold text-white">
                             {p.category}
                           </div>
-                          
+
                           <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
                             <a
                               href="#quote"
@@ -1061,15 +1010,13 @@ export default function App() {
                 </StackingCardItem>
               ))}
 
-              <StackingCardItem index={DATA.projects.length} className="h-[700px] mb-12">
+              <StackingCardItem className="h-[700px] mb-12">
                 <div className="h-full w-full max-w-6xl mx-auto flex items-center justify-center">
                   <div className="text-center">
                     <h3 className="text-7xl leading-loose md:text-9xl font-black bg-gradient-to-br from-yellow-400 to-amber-300 bg-clip-text text-transparent mb-8">
                       Ready?
                     </h3>
-                    <p className="text-2xl text-gray-400 mb-12">
-                      Let's create something extraordinary together
-                    </p>
+                    <p className="text-2xl text-gray-400 mb-12">Let's create something extraordinary together</p>
                     <a
                       href="#quote"
                       className="inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-yellow-400 to-amber-300 px-10 py-5 text-lg font-bold text-slate-950 shadow-2xl shadow-yellow-400/30 hover:shadow-yellow-400/50 hover:scale-105 transition-all"
@@ -1082,12 +1029,11 @@ export default function App() {
             </StackingCards>
           </div>
         </section>
+
         <section id="quote" className="bg-slate-950 py-24 md:py-32">
           <div className="mx-auto max-w-4xl px-6 md:px-8">
             <div className="text-center mb-16">
-              <h2 className="text-5xl font-black tracking-tight md:text-6xl bg-gradient-to-br from-yellow-400 to-amber-300 bg-clip-text text-transparent mb-6">
-                Let’s Build Your 3D Universe
-              </h2>
+              <h2 className="text-5xl font-black tracking-tight md:text-6xl bg-gradient-to-br from-yellow-400 to-amber-300 bg-clip-text text-transparent mb-6">Let’s Build Your 3D Universe</h2>
               <p className="text-xl text-gray-400 max-w-2xl mx-auto">
                 Ready to create an experience that turns visitors into believers? Whether you’re a startup or an established brand, we’ll bring your vision to life.
               </p>
@@ -1107,50 +1053,14 @@ export default function App() {
                 <form onSubmit={handleSubmit}>
                   <p className="text-center text-gray-300 mb-8 font-medium">Let’s talk ideas, timelines, and transformations.</p>
                   <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                    <InputField
-                      label="Name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleFormChange}
-                      placeholder="Your Name"
-                    />
-                    <InputField
-                      label="Email"
-                      name="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleFormChange}
-                      placeholder="Your Email"
-                    />
+                    <InputField label="Name" name="name" value={formData.name} onChange={handleFormChange} placeholder="Your Name" />
+                    <InputField label="Email" name="email" type="email" value={formData.email} onChange={handleFormChange} placeholder="Your Email" />
                   </div>
-                  <InputField
-                    label="Company"
-                    name="company"
-                    value={formData.company}
-                    onChange={handleFormChange}
-                    placeholder="Your Company / Brand"
-                    className="mt-5"
-                  />
-                  <SelectField
-                    label="Budget"
-                    name="budget"
-                    value={formData.budget}
-                    onChange={handleFormChange}
-                    options={BUDGET_OPTIONS}
-                    placeholder="Select Project Budget"
-                    className="mt-5"
-                  />
-                  <TextAreaField
-                    label="Message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleFormChange}
-                    placeholder="Tell us about your project..."
-                    className="mt-5"
-                    rows={5}
-                  />
-                  
-                  {/* --- THIS IS WHERE THE ERROR MESSAGE WILL APPEAR --- */}
+                  <InputField label="Company" name="company" value={formData.company} onChange={handleFormChange} placeholder="Your Company / Brand" className="mt-5" />
+                  <SelectField label="Budget" name="budget" value={formData.budget} onChange={handleFormChange} options={BUDGET_OPTIONS} placeholder="Select Project Budget" className="mt-5" />
+                  <TextAreaField label="Message" name="message" value={formData.message} onChange={handleFormChange} placeholder="Tell us about your project..." className="mt-5" rows={5} />
+
+                  {/* error slot */}
                   {formStatus.error && <p className="text-red-500 text-center mt-6">{formStatus.error}</p>}
 
                   <button
@@ -1158,7 +1068,7 @@ export default function App() {
                     disabled={formStatus.submitting}
                     className="mt-8 w-full rounded-full bg-gradient-to-r from-yellow-400 to-amber-300 px-8 py-4 text-base font-bold text-slate-950 shadow-lg shadow-yellow-400/30 hover:shadow-yellow-400/50 hover:scale-[1.02] transition-all disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
-                    {formStatus.submitting ? "Sending..." : " Launch My Project"}
+                    {formStatus.submitting ? 'Sending...' : ' Launch My Project'}
                   </button>
                 </form>
               )}
@@ -1169,5 +1079,14 @@ export default function App() {
 
       <Footer siteName={DATA.siteName} contact={DATA.contact} social={DATA.social} />
     </div>
+  )
+}
+
+// Default export wrapped in Suspense to satisfy Next.js requirement
+export default function Page() {
+  return (
+    <Suspense fallback={<p>Loading...</p>}>
+      <HomeApp />
+    </Suspense>
   )
 }
