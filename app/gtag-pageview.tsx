@@ -1,4 +1,4 @@
-// components/GtagPageView.tsx
+// app/gtag-pageview.tsx
 'use client'
 
 import { useEffect, useRef } from 'react'

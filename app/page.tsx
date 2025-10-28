@@ -1,3 +1,4 @@
+// app/page.tsx
 'use client'
 
 export const dynamic = 'force-dynamic'
@@ -692,11 +693,13 @@ export function HomeApp() {
   useEffect(() => {
     if (heroRef.current) {
       gsap.fromTo(
+        // @ts-expect-error querySelector may return null
         heroRef.current.querySelector('.hero-content'),
         { opacity: 0, y: 50 },
         { opacity: 1, y: 0, duration: 1, delay: 0.3, ease: 'power3.out' }
       )
       gsap.fromTo(
+        // @ts-expect-error querySelector may return null
         heroRef.current.querySelector('.hero-form'),
         { opacity: 0, x: 50 },
         { opacity: 1, x: 0, duration: 1, delay: 0.5, ease: 'power3.out' }
@@ -784,8 +787,8 @@ export function HomeApp() {
     setFormStatus({ submitting: true, submitted: false, error: '' })
     const result = await sendEmail(formData)
 
-    if (result && result.error) {
-      setFormStatus({ submitting: false, submitted: false, error: result.error })
+    if (result && (result as any).error) {
+      setFormStatus({ submitting: false, submitted: false, error: (result as any).error })
       return
     }
 
@@ -796,9 +799,13 @@ export function HomeApp() {
     // --- Google Ads conversion (fires only if configured) ---
     try {
       if (ADS_SEND_TO) {
-        window.gtag?.('event', 'conversion', { send_to: ADS_SEND_TO })
+        // include value/currency; adjust if you have dynamic values
+        window.gtag?.('event', 'conversion', {
+          send_to: ADS_SEND_TO,
+          value: 1.0,
+          currency: 'INR',
+        })
       } else if (GA_ID) {
-        // If label not provided, warn (don’t send an invalid call)
         console.warn('NEXT_PUBLIC_GOOGLE_ADS_SEND_TO is not set; conversion label missing, event not sent.')
       }
     } catch {

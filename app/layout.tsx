@@ -1,7 +1,7 @@
 // app/layout.tsx
 import type { Metadata } from 'next'
 import Script from 'next/script'
-import { Suspense } from 'react'              // ✅ add this
+import { Suspense } from 'react'
 import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
 import { Analytics } from '@vercel/analytics/react'
@@ -40,7 +40,7 @@ export default function RootLayout({
               `}
             </Script>
 
-            {/* ✅ wrap in Suspense because GtagPageView uses useSearchParams */}
+            {/* Wrap in Suspense because GtagPageView uses useSearchParams */}
             <Suspense fallback={null}>
               <GtagPageView />
             </Suspense>
